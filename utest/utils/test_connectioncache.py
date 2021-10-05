@@ -220,22 +220,22 @@ class TestConnectionCache(unittest.TestCase):
         self.cache.empty_cache()
         assert_false(self.cache)
 
-    def test_resolve_alias_or_index(self):
+    def test_resolve_connection(self):
         self.cache.register(ConnectionMock(), 'alias')
-        assert_equal(self.cache.resolve_alias_or_index('alias'), 1)
-        assert_equal(self.cache.resolve_alias_or_index('1'), 1)
-        assert_equal(self.cache.resolve_alias_or_index(1), 1)
+        assert_equal(self.cache._resolve_connection('alias'), 1)
+        assert_equal(self.cache._resolve_connection('1'), 1)
+        assert_equal(self.cache._resolve_connection(1), 1)
 
-    def test_resolve_invalid_alias_or_index(self):
+    def test_resolve_connection_with_invalid_alias_or_index(self):
         assert_raises_with_msg(ValueError,
                                "Non-existing index or alias 'nonex'.",
-                               self.cache.resolve_alias_or_index, 'nonex')
+                               self.cache._resolve_connection, 'nonex')
         assert_raises_with_msg(ValueError,
                                "Non-existing index or alias '1'.",
-                               self.cache.resolve_alias_or_index, '1')
+                               self.cache._resolve_connection, '1')
         assert_raises_with_msg(ValueError,
                                "Non-existing index or alias '42'.",
-                               self.cache.resolve_alias_or_index, 42)
+                               self.cache._resolve_connection, 42)
 
     def _verify_initial_state(self):
         assert_equal(self.cache.current, self.cache._no_current)
